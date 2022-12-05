@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+    <title>View</title>
+	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3036864356986030"
+     crossorigin="anonymous"></script>
+	<meta name="google-site-verification" content="-ovJkjOPV1Y-6SBFgDEXaOGGLkNQouuXyReuKoVNkN0" />
+
+    <style>
+        body {
+            background-color: #638cb8;
+            font-family: 'Nunito', sans-serif;
+        }
+    
+        input {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            box-sizing: border-box;
+        }
+    
+        input::placeholder {
+            color: #d3d3d3;
+        }
+    
+        .submit {
+            background-color: #6BA3E8;
+        }
+    
+        .center-column {
+            width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 3px;
+            box-shadow: none;
+        
+        }
+
+    
+        .btn-danger {
+            background-color: #ffae19;
+            border-color: #e59400;
+        }
+
+        .link-back {
+        font-weight: bold;
+        }
+    
+        .list-item  {
+        margin: 10px 0;
+        padding: 7px;
+        list-style-type: none;
+        border: solid black 1px;
+        background-color: rgba(224, 224, 224, 0.164);
+        border-radius: 5px;
+    }
+        .list-item-data {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .card-body {
+        display: flex;
+        justify-content: space-between;
+        padding-left: 0;
+        align-items: center;
+
+    }
+
+    p {
+        margin: 0;
+        font-size: medium;
+    }
+
+    .income-expense-box {
+        display: flex;
+        flex-direction: column;
+        margin: 10px auto 0 0;
+    }
+
+    .li-btn-container {
+        display: flex;
+    }
+
+
+    @media screen and (max-width: 600px) {
+    .center-column {
+        width: auto;
+		}
+	}
+	
+	@media screen and (min-width: 600px) {
+    .list-item > .li-btn-container > p{
+        font-size: large;
+    }
+    }
+
+    
+    </style>
+
+</head>
+<body>
+    <div class="center-column shadow-none">
+    <a href="/" class="btn btn-primary link-back" role="button">Back</a>
+    <p></p>
+    <h1>Data of: <small> {{ data.added.date }}</small></h1>
+    <p></p>
+    <li class = "list-item" >
+        <div class="list-item-data">
+            
+            <div class="li-btn-container">
+                <p>
+                    <b>Rs. <span style="color: #000;">{{data.income}}</span></b> ||
+                    <b>Rs. <span style="color: #FF0000;">{{data.expense}}</span></b> ||
+                    <b>{{data.added.date}}</b>
+                </p>
+            </div>
+            <div class="li-btn-container">
+                <a  href="/delete/{{data.id}}" class = "btn btn-danger link-button mx-1" type="submit">Delete</a>
+                <a href="/edit/{{data.id}}" class = "btn btn-primary link-button mx-1" type="submit">Edit</a>
+            </div>
+        </div>
+    </li>
+
+    {% if data.note %}
+    <li class="list-item">
+        <p>{{data.note}}</p>
+    </li>
+    {% endif %}
+</div>
+</body>
+</html>

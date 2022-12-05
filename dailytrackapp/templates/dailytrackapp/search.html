@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+    <title>Search</title>
+	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3036864356986030"
+     crossorigin="anonymous"></script>
+	<meta name="google-site-verification" content="-ovJkjOPV1Y-6SBFgDEXaOGGLkNQouuXyReuKoVNkN0" />
+
+    <style>
+        body {
+            background-color: #638cb8;
+            font-family: 'Nunito', sans-serif;
+        }
+    
+        input {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            box-sizing: border-box;
+        }
+    
+        input::placeholder {
+            color: #d3d3d3;
+        }
+    
+        .submit {
+            background-color: #6BA3E8;
+        }
+    
+        .center-column {
+            width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 3px;
+            box-shadow: none;
+        }
+    
+        .item-row {
+            background-color: #906abd;
+            margin: 10px;
+            padding: 20px;
+            border-radius: 3px;
+            color: #fff;
+            font-size: 16px;
+            box-shadow: 0px -px 10px -4px rgba(0,0,0,0.75);
+        }
+    
+        .btn-danger {
+            background-color: #ffae19;
+            border-color: #e59400;
+        }
+
+        .link-back {
+        font-weight: bold;
+        }
+
+		.list-item  {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			margin: 10px 0;
+			padding: 7px;
+			border: solid black 2px;
+			background-color: rgba(224, 224, 224, 0.164);
+			border-radius: 2px;
+		}
+
+        .list-item a {
+            color: black;
+        }
+
+        p {
+        margin: 0;
+        font-size: medium;
+    }
+    
+        #id_amount, #month-year {
+            background-color: rgb(219, 217, 217);
+            border: none;
+            font-size: 1em;
+        }
+    
+        .para-object {
+            font-size: smaller;
+        }
+    
+        @media screen and (max-width: 600px) {
+        .center-column {
+            width: auto;
+        }
+    }
+    
+    </style>
+
+</head>
+<body>
+<div id="list" class="center-column shadow-none">
+    <h3>This Months Graph</h3>
+        <div class="chart-container-box">
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
+
+    <div class="center-column shadow-none">
+    <a href="/" class="btn btn-primary link-back" role="button">Back</a>
+    <h1>Search here</h1>
+    {% if date %}
+    <h5>Selected month <b>{{date}}</b></h5>
+    {% else %}
+    <h3>Select month</h3>
+    {% endif %}
+    
+        <form action="{% url 'search' %}" method="POST">
+            {% csrf_token %}
+            <input id="myDate" type="month" name="month_year" value="{{date}}" id="">
+            <input class="btn btn-info" type="submit" value="Search">
+        </form>
+        
+    <h3>Search results:</h3>
+    {% if results %}
+    <h5>Total Income: Rs.<b>{{Total_income}}</b><br>
+    Total Expense: Rs. <b>{{Total_expense}}</b></h5>
+    {% endif %}
+
+    <div class="amount-list" id="amount-list"> 
+        {% if results %}       
+        {% for result in results %}
+            <div class="list-item">
+                <a href="{% url 'view' result.id %}" class="text-decoration-none">
+                    <p>Amount: <b>Rs. {{result.income}}</b> || Date: <b>{{result.added.date}}</b> </p>
+                </a>
+            </div>
+        {% endfor %}
+        {% else %}
+        <p>Sorry no results.</p>
+        {% endif %}
+    </div>
+
+</div>
+
+    
+    <script>
+
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var chart = new Chart(ctx, {
+        // The type of chart we want to create
+        type: 'line',
+    
+        // The data for our dataset
+        data: {
+            {% if labels %}
+            labels:{{labels}},
+            {% else %}
+            labels:[],
+            {% endif %}
+            datasets: [
+                {
+                label: 'Income',
+                backgroundColor: 'rgb(255, 99, 132, 0)',
+                borderColor: '#ffc107',
+                {% if labels %}
+                data: {{data}}
+                {% else %}
+                data:[],
+                {% endif %}
+            },
+            {
+                label: 'Expense',
+                backgroundColor: 'rgb(255, 99, 132, 0)',
+                borderColor: '#FF0000',
+                {% if labels %}
+                data: {{expense}}
+                {% else %}
+                data:[]
+                {% endif %}
+            },
+
+        ]
+        },
+    
+        // Configuration options go here
+        options: {
+            scales: {
+        yAxes: [{
+            ticks: {
+                min: 0, // it is for ignoring negative step.
+                beginAtZero: true,
+                labelString: 'probability',
+                callback: function(value, index, values) {
+                if (Math.floor(value) === value) {
+                return value;
+                }
+    }       
+            ,{% if max_amount %}
+            suggestedMax: {{max_amount}}
+            {% else %}
+            suggestedMax: 200
+            {% endif %}
+            }
+         }]
+      }
+        }
+    });
+    </script>
+
+
+</body>
+</html>

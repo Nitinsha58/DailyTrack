@@ -1,0 +1,290 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Track</title>
+	<meta name="google-site-verification" content="-ovJkjOPV1Y-6SBFgDEXaOGGLkNQouuXyReuKoVNkN0" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/apple-touch-icon.png' %}">
+    <link rel="shortcut icon" href="{% static 'images/favicon-32x32.png' %}" type="image/x-icon">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon-32x32.png' %}">
+    
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'images/site.webmanifest' %}">
+    <meta name="msapplication-config" content="{% static 'images/browserconfig.xml' %}" />
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="theme-color" content="#ffffff">
+<style>
+    body {
+        background-color: #638cb8;
+        font-family: 'Nunito', sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    input {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        box-sizing: border-box;
+    }
+
+    input::placeholder {
+        color: #d3d3d3;
+    }
+
+    .submit {
+        background-color: #6BA3E8;
+    }
+
+    .center-column {
+        width: 600px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 3px;
+        box-shadow: none;
+    }
+
+    .btn-danger {
+        background-color: #ffae19;
+        border-color: #e59400;
+    }
+
+    #id_income {
+        border: none;
+        font-size: 1em;
+        border-radius: 5px;
+        border: 1px solid black;
+    }
+    #id_expense {
+        border: none;
+        font-size: 1em;
+        border-radius: 5px;
+        border: 1px solid black;
+    }
+    #id_note {
+        white-space: pre-wrap;
+        height: 50px;
+        max-height: fit-content;
+        
+        width: 100%;
+        border: 1px solid black;
+        border-radius: 5px;
+        resize: none;
+        display: flex;
+        padding: 10px;
+    }
+
+    .para-object {
+        font-size: smaller;
+    }
+
+    .container-box {
+        display: flex;
+        
+    }
+
+    .link-admin {
+        font-weight: bold;
+        margin: 0 5px 0 0;
+    }
+
+    .link-search, .link-button {
+        font-weight: bold;
+        margin: 0 5px 0 5px;
+    }
+
+    .un-list {
+        list-style-type: none;
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        margin: 0;
+    }
+
+    .un-list a {
+        color: black;
+    }
+    
+    .list-item  {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 10px 0;
+        padding: 7px;
+        border: solid black 2px;
+        background-color: rgba(224, 224, 224, 0.164);
+        border-radius: 2px;
+    }
+    
+    .card-body {
+        display: flex;
+        justify-content: space-between;
+        padding-left: 0;
+        align-items: center;
+
+    }
+
+    p {
+        margin: 0;
+        font-size: medium;
+    }
+
+    .income-expense-box {
+        display: flex;
+        flex-direction: column;
+        margin: 10px auto 0 0;
+    }
+
+    .li-btn-container {
+        display: flex;
+    }
+
+
+    @media screen and (max-width: 600px) {
+    .center-column {
+        width: auto;
+		}
+	}
+	
+	@media screen and (min-width: 600px) {
+    .list-item > .li-btn-container > p{
+        font-size: large;
+    }
+    }
+	
+
+</style>
+</head>
+<body>
+
+<div id="list" class="center-column shadow-none">
+
+    <div class="card-body">
+        <h5><b>Hello, {{user.username}}!</b></h5>
+        <span>
+            <a class="btn btn-danger" href="{% url 'logout' %}">Logout</a>
+        </span>
+    </div>
+
+<h3>This Months Report.</h3>
+    <div class="chart-container-box">
+        <canvas id="myChart"></canvas>
+    </div>
+</div>
+
+
+<div id="list" class="center-column shadow-none">
+<h1>Money Track</h1>
+<div class="container-box">
+    <a href="{% url 'search' %}" class="btn btn-warning link-search" role="button">Search</a>
+</div>
+
+<div class="income-expense-box">
+    <p>Monthly Total Income <b>{{Total_income}}</b></p>
+    <p>Monthly Total Expense <b>{{Total_expense}}</b></p>
+</div>
+    <form method="POST" action="">
+        {% csrf_token %}
+        <p><b>Today's Income:</b></p>
+        {{form.income}}
+        <p><b>Today's Expense:</b></p>
+        {{form.expense}}
+        <p><b>Note:</b></p>
+        {{form.note}}
+
+        <input class="btn btn-info" type="submit" name = 'Add amount'>
+    </form>
+
+    <div class="amount-list" id="amount-list">
+            <ul class="un-list">
+            {% for data in tracker %}
+            <a href="{% url 'view' data.id %}" class="text-decoration-none w-100">
+              <li class = "list-item" >
+                  <div class="li-btn-container">
+                  <p> 
+                      <b>Rs. <span style="color: #000;">{{data.income}}</span></b> ||  
+                      <b>Rs. <span style="color: #FF0000;">{{data.expense}}</span></b> || 
+                      <b>{{data.added.date}}</b>
+                    </p>
+
+                </div>
+                </li>
+            </a>
+            {% endfor %}
+            </ul>
+          </div>
+</div>
+
+
+<script>
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'line',
+
+    // The data for our dataset
+    data: {
+            {% if labels %}
+            labels: {{labels}},
+            {% else %}
+            labels:[],
+            {% endif %}
+
+            datasets: [
+                {
+                label: 'Income',
+                backgroundColor: 'rgb(255, 99, 132, 0)',
+                borderColor: '#ffc107',
+                {% if labels %}
+                data: {{income}}
+                {% else %}
+                data:[]
+                {% endif %}
+                },
+
+            {
+                label: 'Expense',
+                backgroundColor: 'rgb(255, 99, 132, 0)',
+                borderColor: '#FF0000',
+                {% if labels %}
+                data: {{expense}}
+                {% else %}
+                data:[]
+                {% endif %}
+            },
+            ]
+        },
+
+
+    // Configuration options go here
+    options: {
+        scales: {
+        yAxes: [{
+            ticks: {
+                min: 0, // it is for ignoring negative step.
+                beginAtZero: true,
+                labelString: 'probability',
+                callback: function(value, index, values) {
+                if (Math.floor(value) === value) {
+                return value;
+                }
+    }
+            ,suggestedMax: {{max_amount}},
+            }
+         }]
+      }
+    }
+});
+</script>
+
+</body>
+</html>

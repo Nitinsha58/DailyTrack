@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+    <title>Edit</title>
+	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3036864356986030"
+     crossorigin="anonymous"></script>
+	<meta name="google-site-verification" content="-ovJkjOPV1Y-6SBFgDEXaOGGLkNQouuXyReuKoVNkN0" />
+
+    <style>
+        body {
+            background-color: #638cb8;
+            font-family: 'Nunito', sans-serif;
+        }
+    
+        input {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            box-sizing: border-box;
+        }
+    
+        input::placeholder {
+            color: #d3d3d3;
+        }
+    
+        .submit {
+            background-color: #6BA3E8;
+        }
+    
+        .center-column {
+            width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 3px;
+            box-shadow: none;
+        
+        }
+
+    
+        .btn-danger {
+            background-color: #ffae19;
+            border-color: #e59400;
+        }
+
+        .link-back {
+        font-weight: bold;
+        }
+    
+        #id_income {   
+            border: 1px solid black;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        #id_expense {   
+            border: 1px solid black;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        
+        #id_note {
+            white-space: pre-wrap;
+            height: 50px;
+            max-height: fit-content;
+            min-height: fit-content;
+            
+            width: 100%;
+            border: 1px solid black;
+            border-radius: 5px;
+            resize: none;
+            display: flex;
+            padding: 10px;
+        }
+
+
+        p {
+        margin: 0;
+        font-size: medium;
+        font-size: large;
+        }
+    
+    
+        @media screen and (max-width: 600px) {
+        .center-column {
+            width: auto;
+        }
+    }
+    
+    </style>
+
+</head>
+<body>
+    <div class="center-column shadow-none">
+    <a href="/" class="btn btn-primary link-back" role="button">Back</a>
+    <h1>Edit here</h1>
+    <p></p>
+    <h3>Do you Want to edit this.</h3>
+    <div class="amount-list">
+        <h5> 
+            <b>Date: </b>
+            <b>{{item.added.date}}</b>
+        </h5>
+
+        <form method="POST" action="">
+            {% csrf_token %}
+            <p> 
+                <b>Edit Income</b>
+            </p>
+            {{form.income}}
+            <p> 
+                <b>Edit Expense</b>
+            </p>
+            {{form.expense}}
+            <p> 
+                <b>Edit Note</b>
+            </p>
+            {{form.note}}
+            <input class="btn btn-info" type="submit" name = 'Add amount'>
+        </form>
+    </div>
+</div>
+</body>
+</html>
